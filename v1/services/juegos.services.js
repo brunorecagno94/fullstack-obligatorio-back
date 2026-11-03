@@ -22,7 +22,7 @@ export const crearJuegoService = async (juegoData) => {
   return juegoNuevo;
 }
 
-export const obtenerJuegosService = async ({ nombre, categoria, precioMin, precioMax, limit, page } = {}) => {
+export const obtenerJuegosService = async ({ nombre, categoria, precioMin, precioMax, limit, page, ordenarPor, orden } = {}) => {
   const filtro = { active: true };
   if (nombre) filtro.nombreJuego = { $regex: nombre, $options: "i" };
   if (categoria) filtro.categorias = categoria;
@@ -36,8 +36,14 @@ export const obtenerJuegosService = async ({ nombre, categoria, precioMin, preci
   page = Number(page) || 1;
   const skip = (page - 1) * limit;
 
+  const sort = {};
+  if (ordenarPor) {
+    const campoOrden = ordenarPor === "precio" ? "precioJuego" : "nombreJuego";
+    sort[campoOrden] = orden === "desc" ? -1 : 1;
+  }
+
   const [juegos, total] = await Promise.all([
-    Juego.find(filtro).populate("categorias", "nombreCategoria").skip(skip).limit(limit),
+    Juego.find(filtro).populate("categorias", "nombreCategoria").sort(sort).skip(skip).limit(limit),
     Juego.countDocuments(filtro)
   ]);
 

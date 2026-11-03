@@ -108,6 +108,12 @@ export const obtenerJuegosQuerySchema = Joi.object({
     'number.min': 'El límite debe ser mayor o igual a {#limit}',
     'number.max': 'El límite no puede ser mayor a {#limit}',
   }),
+  ordenarPor: Joi.string().valid('nombre', 'precio').messages({
+    'any.only': 'Solo se puede ordenar por "nombre" o "precio"',
+  }),
+  orden: Joi.string().valid('asc', 'desc').default('asc').messages({
+    'any.only': 'El orden debe ser "asc" o "desc"',
+  }),
 });
 
 export const obtenerPrecioConvertidoQuerySchema = Joi.object({
