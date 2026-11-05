@@ -12,11 +12,12 @@ connectDB();
 configurarCloudinary();
 const app = express();
 app.disable('x-powered-by');
-app.use(cors({
+app.use(cors());
+/* app.use(cors({
   origin: ["http://localhost:3000", "http://localhost:5173"],
   allowedHeaders: ["Content-Type", "Authorization"],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
-}));
+})); */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
