@@ -8,12 +8,7 @@ export const loginUsuario = async (req, res) => {
   res.status(200).json({
     message: 'Inicio de sesión exitoso!', 
     token, 
-    usuario: {
-      id: usuario._id,
-      nombreUsuario: usuario.nombreUsuario,
-      rol: usuario.rol,
-      planUsuario: usuario.planUsuario
-    }
+    usuario
   });
 };
 
