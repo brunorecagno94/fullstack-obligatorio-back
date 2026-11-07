@@ -2,6 +2,7 @@ import {
   upgradePlanUsuarioService,
   comprarJuegoService,
   verJuegosCompradosService,
+  eliminarJuegoService
 } from "../services/usuarios.services.js";
  
 
@@ -18,4 +19,9 @@ export const comprarJuego = async (req, res) => {
 export const verJuegosComprados = async (req, res) => {
   const juegosComprados = await verJuegosCompradosService(req.decoded.id);
   res.status(200).json({juegosComprados});
+}
+
+export const eliminarJuego = async (req, res) => {
+  const juego = await eliminarJuegoService(req.decoded.id, req.validatedParams.id);
+  res.status(200).json({ message: `Se quitó ${juego?.nombreJuego || 'el juego'} de tu biblioteca` });
 }

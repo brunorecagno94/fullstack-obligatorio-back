@@ -18,26 +18,43 @@ export const upgradePlanUsuarioService = async (id) => {
 export const comprarJuegoService = async (idUsuario, idJuego) => {
   const usuario = await Usuario.findById(idUsuario);
   const juego = await Juego.findById(idJuego);
-  
+
   if (!usuario || usuario.active === false) throwError("No se encontró el usuario", 404);
   if (!juego || juego.active === false) throwError("No se encontró el juego", 404);
   if (usuario.rol !== "usuario") throwError("Solo los usuarios pueden comprar juegos", 403);
-  
+
   const edadUsuario = calcularEdad(usuario.fechaNacimiento);
   if (edadUsuario < juego.edadMinima) throwError("No tienes edad suficiente para comprar este juego", 403);
 
   const juegoComprado = usuario.juegosComprados.some((id) => id.equals(juego._id));
   if (juegoComprado) throwError("Ya tenés este juego en tu biblioteca", 409);
   if (usuario.planUsuario === "plus" && usuario.juegosComprados.length >= 4) throwError("No se puede superar el límite de compras (4)", 400);
-  
+
   usuario.juegosComprados.push(juego._id);
   await usuario.save();
   return juego;
 }
 
 export const verJuegosCompradosService = async (idUsuario) => {
-  const usuario = await Usuario.findById(idUsuario).populate("juegosComprados", "nombreJuego descripcionJuego" );
-
+  const usuario = await Usuario.findById(idUsuario).populate({
+    path: "juegosComprados",
+    select: "nombreJuego descripcionJuego imagenJuego categorias",
+    populate: { path: "categorias", select: "nombreCategoria" }
+  });
   if (!usuario || usuario.active === false) throwError("No se encontró el usuario", 404);
   return usuario.juegosComprados;
+}
+
+export const eliminarJuegoService = async (idUsuario, idJuego) => {
+  const usuario = await Usuario.findById(idUsuario);
+  if (!usuario || usuario.active === false) throwError("No se encontró el usuario", 404);
+
+  const tieneJuego = usuario.juegosComprados.some((id) => id.equals(idJuego));
+  if (!tieneJuego) throwError("Ese juego no está en tu biblioteca", 404);
+
+  usuario.juegosComprados = usuario.juegosComprados.filter((id) => !id.equals(idJuego));
+  await usuario.save();
+
+  const juego = await Juego.findById(idJuego);
+  return juego;
 }
