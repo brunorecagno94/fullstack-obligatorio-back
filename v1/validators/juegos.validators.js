@@ -47,10 +47,13 @@ export const editarJuegoSchema = Joi.object({
     'string.max': 'La descripción del juego no puede superar los {#limit} caracteres',
   }),
   precioJuego: Joi.number().positive().messages({
+    'number.base': 'El precio del juego debe ser un número',
     'number.positive': 'El precio del juego debe ser un número positivo',
   }),
-  monedaJuego: Joi.string().length(3).uppercase().optional().messages({
+  monedaJuego: Joi.string().length(3).uppercase().required().messages({
     'string.length': 'La moneda debe ser un código de 3 letras (ej: UYU, USD, EUR)',
+    'string.empty': 'Debe ingresar una moneda válida para el juego',
+    'any.required': 'Debe ingresar una moneda válida para el juego',
   }),
   edadMinima: Joi.number().integer().min(0).max(18).messages({
     'number.integer': 'La edad mínima debe ser un número entero',
@@ -58,6 +61,7 @@ export const editarJuegoSchema = Joi.object({
   }),
   categorias: Joi.array().items(
     Joi.string().hex().length(24).messages({
+      'array.base': 'Debe enviar un arreglo de categorías',
       'string.hex': 'Cada categoría debe ser un ObjectId válido',
       'string.length': 'Cada categoría debe tener 24 caracteres',
     })

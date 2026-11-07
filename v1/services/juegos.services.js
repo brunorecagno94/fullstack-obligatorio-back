@@ -43,7 +43,7 @@ export const obtenerJuegosService = async ({ nombre, categoria, precioMin, preci
   }
 
   const [juegos, total] = await Promise.all([
-    Juego.find(filtro).populate("categorias", "nombreCategoria").sort(sort).skip(skip).limit(limit),
+    Juego.find(filtro).populate("categorias", "nombreCategoria").sort(sort).collation({ locale: "es" }).skip(skip).limit(limit),
     Juego.countDocuments(filtro)
   ]);
 
