@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get('/', validarQueryMiddleware(obtenerJuegosQuerySchema), obtenerJuegos);
 router.get('/:id', validarParamsMiddleware(obtenerJuegoPorIdSchema), obtenerJuegoPorId);
-router.get('/:id/descripcion-ia', authorizationMiddleware('usuario'), validarParamsMiddleware(obtenerJuegoPorIdSchema), obtenerDescripcionIA);
+router.get('/:id/descripcion-ia', authorizationMiddleware('admin'), validarParamsMiddleware(obtenerJuegoPorIdSchema), obtenerDescripcionIA);
 router.get('/:id/convertir-precio', validarParamsMiddleware(obtenerJuegoPorIdSchema), validarQueryMiddleware(obtenerPrecioConvertidoQuerySchema), obtenerPrecioConvertido);
 router.post('/', authorizationMiddleware('admin'), validarBodyMiddleware(crearJuegoSchema), crearJuego);
 router.patch('/:id', authorizationMiddleware('admin'), validarParamsMiddleware(obtenerJuegoPorIdSchema), validarBodyMiddleware(editarJuegoSchema), actualizarJuego);

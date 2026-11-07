@@ -90,7 +90,7 @@ export const obtenerDescripcionIAService = async (id) => {
   const juego = await obtenerJuegoPorIdService(id);
 
   try {
-    const prompt = `¿Podrías contarme más sobre el juego "${juego.nombreJuego}"?.`;
+    const prompt = `Preciso que escribas una descripción de máximo de 180 caracteres sobre el juego "${juego.nombreJuego}", en un sólo párrafo, sin comillas ni formato.`;
     const chatCompletion = await obtenerConsultaGroqService(prompt);
     const descripcionIA = chatCompletion?.choices?.[0]?.message?.content;
 
