@@ -13,7 +13,7 @@ configurarCloudinary();
 const app = express();
 app.disable('x-powered-by');
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:5173"],
+  origin: ["http://localhost:3000", "http://localhost:5173", "https://obligatorio-front.vercel.app"],
   allowedHeaders: ["Content-Type", "Authorization"],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
 }));
