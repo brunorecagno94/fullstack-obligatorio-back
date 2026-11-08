@@ -8,17 +8,7 @@ import notFoundMiddleware from "./v1/middlewares/notFound.middleware.js";
 import errorMiddleware from "./v1/middlewares/error.middleware.js";
 
 dotenv.config();
-
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-
-app.use("/v1", routes);
+connectDB();
 configurarCloudinary();
 const app = express();
 app.disable('x-powered-by');
@@ -29,7 +19,14 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 app.use("/v1", routes);
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
