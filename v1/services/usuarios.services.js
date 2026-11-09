@@ -30,8 +30,12 @@ export const comprarJuegoService = async (idUsuario, idJuego) => {
   if (juegoComprado) throwError("Ya tenés este juego en tu biblioteca", 409);
   if (usuario.planUsuario === "plus" && usuario.juegosComprados.length >= 4) throwError("No se puede superar el límite de compras (4)", 400);
 
-  usuario.juegosComprados.push(juego._id);
-  await usuario.save();
+  const filtro = { _id: usuario._id, juegosComprados: { $ne: juego._id } };
+  if (usuario.planUsuario === "plus") filtro["juegosComprados.3"] = { $exists: false };
+
+  const resultado = await Usuario.updateOne(filtro, { $push: { juegosComprados: juego._id } });
+  if (resultado.modifiedCount === 0) throwError("No se pudo completar la compra: ya tenés el juego o llegaste al límite", 409);
+
   return juego;
 }
 
